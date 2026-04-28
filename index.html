@@ -1,128 +1,126 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#07111f" />
   <title>مسروقاتي | تحقق قبل أن تشتري</title>
-  <meta name="description" content="منصة عربية للتبليغ عن المسروقات والمفقودات والتحقق من الرقم التسلسلي قبل الشراء." />
+  <meta name="description" content="منصة عربية للتبليغ عن المفقودات والمسروقات والتحقق من الرقم التسلسلي قبل الشراء." />
+  <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header class="header">
+  <div class="noise"></div>
+  <header class="topbar">
     <div class="container nav">
-      <div class="brand" onclick="showPage('home')">
-        <div class="brand-icon">🛡️</div>
-        <div>
-          <strong>مسروقاتي</strong>
-          <small>تحقق قبل أن تشتري</small>
-        </div>
-      </div>
-      <nav>
-        <button onclick="showPage('home')">الرئيسية</button>
-        <button onclick="showPage('add')">إضافة بلاغ</button>
-        <button onclick="showPage('reports')">البلاغات</button>
-        <button onclick="toggleTheme()">الوضع</button>
+      <button class="brand" onclick="go('home')"><span class="brand-icon">🛡️</span><span>مسروقاتي</span></button>
+      <nav class="nav-actions">
+        <button onclick="go('home')">الرئيسية</button>
+        <button onclick="go('reports')">البلاغات</button>
+        <button onclick="go('report')">إضافة بلاغ</button>
+        <button onclick="go('pricing')">الربح</button>
+        <button onclick="toggleAuth()" id="authBtn">تسجيل الدخول</button>
+        <button onclick="toggleTheme()" title="تبديل الوضع">☀️/🌙</button>
       </nav>
     </div>
   </header>
 
   <main id="home" class="page active">
     <section class="hero container">
-      <div class="hero-text">
-        <span class="pill">منصة مجتمعية للتحقق</span>
-        <h1>لا تشترِ شيئًا مستعملًا قبل أن تتحقق من رقمه.</h1>
-        <p>ابحث بالرقم التسلسلي أو IMEI أو VIN لمعرفة هل تم التبليغ عنه من أحد المستخدمين.</p>
-        <div class="search-panel">
-          <input id="searchInput" placeholder="أدخل الرقم التسلسلي / IMEI / VIN" />
-          <button onclick="searchItem()">تحقق الآن</button>
+      <div class="hero-copy">
+        <div class="pill">منصة تحقق مجتمعية • عربية • سريعة</div>
+        <h1>تحقق من الرقم التسلسلي قبل أن تشتري.</h1>
+        <p>ابحث عن IMEI أو VIN أو رقم تسلسلي لأي غرض مستعمل. إذا وُجد بلاغ، تظهر لك التفاصيل فورًا. المنصة تعرض بلاغات المستخدمين ولا تُصدر حكمًا قانونيًا.</p>
+        <div class="search-panel glass">
+          <label>بحث سريع</label>
+          <div class="search-row">
+            <input id="quickSearch" placeholder="اكتب IMEI / VIN / Serial Number" onkeydown="if(event.key==='Enter') smartSearch()" />
+            <button class="primary" onclick="smartSearch()">تحقق الآن</button>
+          </div>
+          <div id="searchMessage" class="message"></div>
         </div>
-        <div id="searchResult" class="result"></div>
+        <div class="hero-buttons">
+          <button class="primary" onclick="go('report')">أضف بلاغك</button>
+          <button class="secondary" onclick="installPWA()">تثبيت كموقع/تطبيق</button>
+        </div>
       </div>
-      <div class="hero-card">
-        <h2>كيف يعمل؟</h2>
-        <div class="step"><b>1</b><span>صاحب الغرض يضيف بلاغًا.</span></div>
-        <div class="step"><b>2</b><span>المشتري يبحث بالرقم التسلسلي.</span></div>
-        <div class="step"><b>3</b><span>الموقع يعرض إن وُجد بلاغ مطابق.</span></div>
-        <div class="warning">تنبيه: الموقع يعرض بلاغات مستخدمين فقط، ولا يثبت السرقة قانونيًا.</div>
+      <div class="hero-card glass">
+        <div class="shield">🔐</div>
+        <h2>نظام ثقة ذكي</h2>
+        <ul>
+          <li>بحث سريع ومباشر</li>
+          <li>حسابات محلية تجريبية</li>
+          <li>تثبيت على الهاتف PWA</li>
+          <li>مساعد ذكي داخل الموقع</li>
+        </ul>
       </div>
     </section>
 
-    <section class="container section">
-      <div class="section-head">
-        <h2>أحدث البلاغات</h2>
-        <p>آخر العناصر المضافة.</p>
-      </div>
-      <div id="recentReports" class="cards"></div>
+    <section class="container stats-grid">
+      <article class="stat glass"><strong id="statReports">0</strong><span>بلاغ منشور</span></article>
+      <article class="stat glass"><strong id="statUsers">0</strong><span>مستخدم محلي</span></article>
+      <article class="stat glass"><strong id="statCities">0</strong><span>مدينة</span></article>
+      <article class="stat glass"><strong id="statSearches">0</strong><span>عملية بحث</span></article>
     </section>
+
+    <section class="container section-head">
+      <div><h2>أحدث البلاغات</h2><p>آخر البلاغات المضافة في قاعدة الموقع المحلية.</p></div>
+      <button class="secondary" onclick="go('reports')">عرض الكل</button>
+    </section>
+    <section class="container cards" id="recentCards"></section>
   </main>
 
-  <main id="add" class="page">
-    <section class="container section">
-      <div class="section-head">
-        <h2>إضافة بلاغ</h2>
-        <p>أدخل بيانات العنصر المفقود أو المسروق.</p>
-      </div>
-      <form class="form-card" onsubmit="addReport(event)">
-        <div class="field">
-          <label>نوع العنصر</label>
-          <select id="itemType" required>
-            <option value="phone">هاتف</option>
-            <option value="car">سيارة</option>
-            <option value="bike">دراجة</option>
-            <option value="laptop">حاسوب</option>
-            <option value="other">آخر</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>عنوان البلاغ</label>
-          <input id="itemTitle" required placeholder="مثال: iPhone 13 أسود" />
-        </div>
-        <div class="field">
-          <label>الرقم التسلسلي / IMEI / VIN</label>
-          <input id="itemSerial" required placeholder="مثال: 356789XXXXXXXXX" />
-        </div>
-        <div class="field">
-          <label>المدينة</label>
-          <input id="itemCity" required placeholder="مثال: وهران" />
-        </div>
-        <div class="field">
-          <label>تاريخ الفقدان</label>
-          <input id="itemDate" type="date" required />
-        </div>
-        <div class="field">
-          <label>رابط صورة اختياري</label>
-          <input id="itemImage" placeholder="https://example.com/image.jpg" />
-        </div>
-        <div class="field full">
-          <label>الوصف</label>
-          <textarea id="itemDesc" required placeholder="اكتب اللون، العلامات، المكان، أي تفاصيل مفيدة..."></textarea>
-        </div>
-        <button class="submit full" type="submit">نشر البلاغ</button>
+  <main id="reports" class="page">
+    <section class="container section-head">
+      <div><h2>كل البلاغات</h2><p>فلترة وبحث احترافي داخل البلاغات.</p></div>
+      <button class="primary" onclick="go('report')">+ بلاغ جديد</button>
+    </section>
+    <section class="container filters glass">
+      <input id="filterText" placeholder="ابحث بالعنوان، المدينة، الرقم..." oninput="renderReports()" />
+      <select id="filterType" onchange="renderReports()">
+        <option value="all">كل الأنواع</option><option value="phone">هواتف</option><option value="car">سيارات</option><option value="bike">دراجات</option><option value="laptop">حواسيب</option><option value="other">أخرى</option>
+      </select>
+      <select id="sortBy" onchange="renderReports()">
+        <option value="new">الأحدث</option><option value="old">الأقدم</option><option value="city">حسب المدينة</option>
+      </select>
+    </section>
+    <section class="container cards" id="allCards"></section>
+  </main>
+
+  <main id="report" class="page">
+    <section class="container narrow">
+      <div class="section-head"><div><h2>إضافة بلاغ</h2><p>املأ البيانات بصدق ودقة. الرقم التسلسلي مطلوب.</p></div></div>
+      <form class="form glass" onsubmit="addReport(event)">
+        <div class="two"><label>نوع الشيء<select id="type" required><option value="phone">هاتف</option><option value="car">سيارة</option><option value="bike">دراجة</option><option value="laptop">حاسوب</option><option value="other">آخر</option></select></label><label>العنوان<input id="title" required placeholder="مثال: iPhone 13 أسود" /></label></div>
+        <div class="two"><label>الرقم التسلسلي / IMEI / VIN<input id="serial" required placeholder="مثال: 356789XXXX" /></label><label>المدينة<input id="city" required placeholder="مثال: وهران" /></label></div>
+        <div class="two"><label>تاريخ الفقدان<input id="lostDate" type="date" required /></label><label>رابط صورة اختياري<input id="image" placeholder="https://..." /></label></div>
+        <label>الوصف<textarea id="description" required placeholder="اكتب العلامات المميزة والمكان والوقت..."></textarea></label>
+        <div class="warning">⚠️ البلاغات الكاذبة قد تسبب ضررًا للناس ومشاكل قانونية. لا تضف بلاغًا إلا بحق.</div>
+        <button class="primary full">نشر البلاغ</button>
       </form>
     </section>
   </main>
 
-  <main id="reports" class="page">
-    <section class="container section">
-      <div class="section-head">
-        <h2>كل البلاغات</h2>
-        <p>تستطيع الضغط على أي بلاغ لعرض التفاصيل.</p>
-      </div>
-      <div id="allReports" class="cards"></div>
+  <main id="pricing" class="page">
+    <section class="container section-head"><div><h2>تجهيز الربح</h2><p>أماكن جاهزة للإعلانات والاشتراكات عندما يكبر الموقع.</p></div></section>
+    <section class="container monetization">
+      <article class="glass plan"><h3>إعلانات</h3><p>مكان جاهز لكود Google AdSense لاحقًا.</p><div class="adbox">مساحة إعلان 728×90</div></article>
+      <article class="glass plan featured"><h3>حساب موثق</h3><p>تمييز البلاغات الموثقة أو الحسابات المميزة مستقبلًا.</p><button class="primary">قريبًا</button></article>
+      <article class="glass plan"><h3>خدمات تحقق</h3><p>خدمة مدفوعة لفحص البلاغات يدويًا مستقبلًا.</p><button class="secondary">قريبًا</button></article>
     </section>
   </main>
 
-  <dialog id="detailsModal">
-    <div class="modal-head">
-      <strong id="modalTitle"></strong>
-      <button onclick="closeModal()">إغلاق</button>
+  <div class="ai-widget">
+    <button class="ai-fab" onclick="toggleAI()">🤖</button>
+    <div id="aiBox" class="ai-box glass">
+      <div class="ai-head"><strong>مساعد مسروقاتي</strong><button onclick="toggleAI()">×</button></div>
+      <div id="aiChat" class="ai-chat"><p class="bot">السلام عليكم، اكتب سؤالك عن البحث أو البلاغات أو الشراء الآمن.</p></div>
+      <div class="ai-input"><input id="aiInput" placeholder="اكتب سؤالك..." onkeydown="if(event.key==='Enter') askAI()" /><button onclick="askAI()">إرسال</button></div>
     </div>
-    <div id="modalBody" class="modal-body"></div>
-  </dialog>
+  </div>
 
-  <footer>
-    <div class="container">© 2026 مسروقاتي — نسخة أولية مجانية.</div>
-  </footer>
+  <dialog id="authDialog"><form class="modal glass" onsubmit="login(event)"><button type="button" class="x" onclick="authDialog.close()">×</button><h2>تسجيل الدخول</h2><p>تسجيل محلي تجريبي محفوظ في المتصفح.</p><input id="loginName" required placeholder="اسمك" /><input id="loginCity" required placeholder="مدينتك" /><button class="primary full">دخول</button></form></dialog>
+  <dialog id="detailsDialog"><div class="modal glass"><button class="x" onclick="detailsDialog.close()">×</button><div id="detailsContent"></div></div></dialog>
 
   <script src="script.js"></script>
 </body>
