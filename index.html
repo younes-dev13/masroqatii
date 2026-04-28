@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>مسروقاتي | تحقق قبل أن تشتري</title>
+  <meta name="description" content="منصة عربية للتبليغ عن المسروقات والمفقودات والتحقق من الرقم التسلسلي قبل الشراء." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container nav">
+      <div class="brand" onclick="showPage('home')">
+        <div class="brand-icon">🛡️</div>
+        <div>
+          <strong>مسروقاتي</strong>
+          <small>تحقق قبل أن تشتري</small>
+        </div>
+      </div>
+      <nav>
+        <button onclick="showPage('home')">الرئيسية</button>
+        <button onclick="showPage('add')">إضافة بلاغ</button>
+        <button onclick="showPage('reports')">البلاغات</button>
+        <button onclick="toggleTheme()">الوضع</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="home" class="page active">
+    <section class="hero container">
+      <div class="hero-text">
+        <span class="pill">منصة مجتمعية للتحقق</span>
+        <h1>لا تشترِ شيئًا مستعملًا قبل أن تتحقق من رقمه.</h1>
+        <p>ابحث بالرقم التسلسلي أو IMEI أو VIN لمعرفة هل تم التبليغ عنه من أحد المستخدمين.</p>
+        <div class="search-panel">
+          <input id="searchInput" placeholder="أدخل الرقم التسلسلي / IMEI / VIN" />
+          <button onclick="searchItem()">تحقق الآن</button>
+        </div>
+        <div id="searchResult" class="result"></div>
+      </div>
+      <div class="hero-card">
+        <h2>كيف يعمل؟</h2>
+        <div class="step"><b>1</b><span>صاحب الغرض يضيف بلاغًا.</span></div>
+        <div class="step"><b>2</b><span>المشتري يبحث بالرقم التسلسلي.</span></div>
+        <div class="step"><b>3</b><span>الموقع يعرض إن وُجد بلاغ مطابق.</span></div>
+        <div class="warning">تنبيه: الموقع يعرض بلاغات مستخدمين فقط، ولا يثبت السرقة قانونيًا.</div>
+      </div>
+    </section>
+
+    <section class="container section">
+      <div class="section-head">
+        <h2>أحدث البلاغات</h2>
+        <p>آخر العناصر المضافة.</p>
+      </div>
+      <div id="recentReports" class="cards"></div>
+    </section>
+  </main>
+
+  <main id="add" class="page">
+    <section class="container section">
+      <div class="section-head">
+        <h2>إضافة بلاغ</h2>
+        <p>أدخل بيانات العنصر المفقود أو المسروق.</p>
+      </div>
+      <form class="form-card" onsubmit="addReport(event)">
+        <div class="field">
+          <label>نوع العنصر</label>
+          <select id="itemType" required>
+            <option value="phone">هاتف</option>
+            <option value="car">سيارة</option>
+            <option value="bike">دراجة</option>
+            <option value="laptop">حاسوب</option>
+            <option value="other">آخر</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>عنوان البلاغ</label>
+          <input id="itemTitle" required placeholder="مثال: iPhone 13 أسود" />
+        </div>
+        <div class="field">
+          <label>الرقم التسلسلي / IMEI / VIN</label>
+          <input id="itemSerial" required placeholder="مثال: 356789XXXXXXXXX" />
+        </div>
+        <div class="field">
+          <label>المدينة</label>
+          <input id="itemCity" required placeholder="مثال: وهران" />
+        </div>
+        <div class="field">
+          <label>تاريخ الفقدان</label>
+          <input id="itemDate" type="date" required />
+        </div>
+        <div class="field">
+          <label>رابط صورة اختياري</label>
+          <input id="itemImage" placeholder="https://example.com/image.jpg" />
+        </div>
+        <div class="field full">
+          <label>الوصف</label>
+          <textarea id="itemDesc" required placeholder="اكتب اللون، العلامات، المكان، أي تفاصيل مفيدة..."></textarea>
+        </div>
+        <button class="submit full" type="submit">نشر البلاغ</button>
+      </form>
+    </section>
+  </main>
+
+  <main id="reports" class="page">
+    <section class="container section">
+      <div class="section-head">
+        <h2>كل البلاغات</h2>
+        <p>تستطيع الضغط على أي بلاغ لعرض التفاصيل.</p>
+      </div>
+      <div id="allReports" class="cards"></div>
+    </section>
+  </main>
+
+  <dialog id="detailsModal">
+    <div class="modal-head">
+      <strong id="modalTitle"></strong>
+      <button onclick="closeModal()">إغلاق</button>
+    </div>
+    <div id="modalBody" class="modal-body"></div>
+  </dialog>
+
+  <footer>
+    <div class="container">© 2026 مسروقاتي — نسخة أولية مجانية.</div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
